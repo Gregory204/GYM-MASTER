@@ -1,0 +1,9 @@
+# IGNORE TEST PYTHON FILE
+tests/verify_connection.py
+
+# IGNORE TEST JS FILE
+tests/test-db.js
+tests/test-jwt.js
+
+
+

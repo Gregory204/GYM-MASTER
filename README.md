@@ -12,15 +12,15 @@ Our application follows a modern, microservices architecture:
 ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
 │                 │      │                 │      │                 │
 │   Mobile App    │◄────►│    AI Coach     │◄────►│ Backend Services│
-│React Native+Expo│      │TensorFlow+TTS  │       │ Node.js+MongoDB │
+│React Native+Expo│      │ TensorFlow+GTTS │      | Node.js+MongoDB │
 │                 │      │                 │      │                 │
-└────────┬────────┘      └─────────────────┘      └────────┬────────┘
+└────────┬────────┘      └─────────────────┘      └────────-┬───────┘
          │                                                  │
          │                                                  │
          ▼                                                  ▼
 ┌─────────────────┐                               ┌─────────────────-┐
 │                 │                               │                  │
-│  Competition    │◄──────────────────────────►   │    Analytics     |
+│  Competition    │ ◄──────────────────────────►  │    Analytics     |
 │     System      │                               │    Platform      │
 │ WebRTC+Socket.io│                               │Firebase Analytics│
 │                 │                               │                  │

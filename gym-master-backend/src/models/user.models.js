@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const UserSchema = new mongoose.Schema({ // Define the schema for the User model
+const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, 'Username is required'],
@@ -45,25 +45,23 @@ const UserSchema = new mongoose.Schema({ // Define the schema for the User model
   timestamps: true
 });
 
-// We have to has so that we don't store the password in plain text
-
 // Hash password before saving
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     next();
   }
   
-  const salt = await bcrypt.genSalt(10); // Salt is a random string that is used to hash the password
-  this.password = await bcrypt.hash(this.password, salt); // Hash the password
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
 // Method to check password
 UserSchema.methods.matchPassword = async function(enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password); // Compare the entered password with the hashed password
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', UserSchema); // Export the User model
+module.exports = mongoose.model('User', UserSchema);
 
 // The password is hashed before saving it to the database. 
 // The matchPassword method is used to compare the entered password with the hashed password. 

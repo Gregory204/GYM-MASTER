@@ -5,5 +5,9 @@ tests/verify_connection.py
 tests/test-db.js
 tests/test-jwt.js
 
+# TESTED API STUFF
+test.html
+test-server.js
 
-
+# IGNORE 
+.env

@@ -1,27 +1,49 @@
-// SERVER ENTRY POINT
-
-const express = require('express'); // Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications
-const mongoose = require('mongoose'); // Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js
-const cors = require('cors'); // Cors allows AJAX requests to skip the Same-origin policy and access resources from remote hosts
-const helmet = require('helmet'); // Helmet helps secure Express apps by setting various HTTP headers
+// src/server.js
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const helmet = require('helmet');
 require('dotenv').config();
 
-// Import Routes
-const authRoutes = require('./routes/auth.routes'); // ex: Import auth routes
-const userRoutes = require('./routes/user.routes');
-const progressRoutes = require('./routes/progress.routes');
-const rewardsRoutes = require('./routes/rewards.routes');
+// Import routes
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
+const progressRoutes = require('./routes/progress');
+const rewardsRoutes = require('./routes/rewards');
 
 // Initialize express app
 const app = express();
 
-// Middleware
-app.use(helmet());
-app.use(cors());
-app.use(express.json()); // Parse JSON bodies
+// Enhanced CORS configuration
+const corsOptions = {
+  origin: '*', // Allow all origins during development
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+app.use(cors(corsOptions));
+
+// Body parsing middleware - EXPLICITLY configure with debug info
+app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`Request body parsing debug for ${req.method} ${req.path}:`, 
+    typeof req.body, 
+    req.body ? Object.keys(req.body).length : 'no body'
+  );
+  next();
+});
+
+// Make sure URL encoded data is parsed too
+app.use(express.urlencoded({ extended: true }));
+
+// Logging middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  next();
+});
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/gym-master', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -29,23 +51,73 @@ mongoose.connect(process.env.MONGODB_URI, {
 .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
-app.use('/api/auth', authRoutes); // ex: Use auth routes
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/rewards', rewardsRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack); // Log the error to the console
-  res.status(500).json({ // Send a 500 Internal Server Error response
-    success: false,
-    message: 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined // Only send the error message in development mode
+// Basic route for testing
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Welcome to Gym Master API',
+    status: 'Server is running correctly'
   });
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => { 
-  console.log(`Server running on port ${PORT}`); // Log a message to the console
+// Test route to verify server responsiveness
+app.get('/test', (req, res) => {
+  res.json({ 
+    message: 'API is working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Echo route for direct testing
+app.post('/echo', (req, res) => {
+  res.json({
+    message: 'Echo endpoint',
+    receivedData: req.body,
+    headers: req.headers
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.method} ${req.originalUrl}`
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err.stack);
+  res.status(500).json({
+    success: false,
+    message: 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// Start server with explicit port
+const PORT = process.env.PORT || 5001;
+
+// Start server with proper error handling
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log('Available test endpoints:');
+  console.log(`- GET http://localhost:${PORT}/`);
+  console.log(`- GET http://localhost:${PORT}/test`);
+  console.log(`- POST http://localhost:${PORT}/echo`);
+  console.log(`Main API routes:`);
+  console.log(`- POST http://localhost:${PORT}/api/auth/register`);
+  console.log(`- POST http://localhost:${PORT}/api/auth/login`);
+  console.log(`- GET http://localhost:${PORT}/api/users/profile`);
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Try using a different port.`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+  }
 });

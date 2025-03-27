@@ -40,14 +40,10 @@ Our application follows a modern, microservices architecture:
 ## Technology Stack 💻
 
 ### Frontend
-- React Native with Expo
-- Camera integration for pose detection
-- UI/UX with gamification elements
-
-### AI Components
-- TensorFlow for pose estimation
-- Google TTS for voice coaching
-- Form correction algorithms
+- React with React Router
+- Bootstrap for responsive UI
+- Axios for API communication
+- Context API for state management
 
 ### Backend
 - Node.js server with Express
@@ -55,87 +51,122 @@ Our application follows a modern, microservices architecture:
 - JWT authentication
 - RESTful API architecture
 
-### Real-time Features
+### AI Components (Coming Soon)
+- TensorFlow for pose estimation
+- Form correction algorithms
+
+### Real-time Features (Coming Soon)
 - WebRTC for video streaming
 - Socket.io for real-time communication
-- Social guild system
+- COMPETITIVE SYSTEM (Coming Soon)
 
-### Analytics
-- User engagement tracking
-- Performance metrics
-- Feature usage analysis
+### Analytics (Coming Soon MAYBE...) 
+- Firebase Analytics
 
 ## Getting Started 🚀
 
 ### Prerequisites
 
 - Node.js v14+ and npm
-- MongoDB
-- React Native development environment
+- MongoDB (local installation or MongoDB Atlas)
+- Git
 
-### Installation
+### Backend Setup
 
 1. Clone the repository
 ```bash
-git clone https://github.com/Gregory204/GYM-MASTER.git
+git clone https://github.com/YourUsername/GYM-MASTER.git
 cd GYM-MASTER
 ```
 
-2. Install backend dependencies
+2. Set up the backend
 ```bash
-cd backend
+# Navigate to the backend directory
+cd gym-master-backend
+
+# Install dependencies
+npm install express mongoose dotenv bcrypt jsonwebtoken cors helmet
+
+# Create .env file for configuration
+echo "PORT=5001
+MONGODB_URI="mongodb+srv://gym-master:<ASK_FOR_PASSWORD>@gym-master.vjykr.mongodb.net/?appName=gym-master"
+JWT_SECRET=your_jwt_secret_key # This is used to sign and verify JSON Web Tokens for user authentication (utils/generateToken.js)
+JWT_EXPIRE=30d" > .env # Duration (30 Days)
+```
+
+3. Start the backend server
+```bash
+# Start the server
+node src/server.js
+
+# You should see output indicating the server is running on port 5001
+# and MongoDB is connected
+```
+
+### Frontend Setup
+
+1. Open a new terminal window/tab
+
+2. Set up the frontend
+```bash
+# Navigate to the frontend directory from the project root
+cd gym-master-frontend
+
+# Install dependencies
 npm install
 ```
 
-3. Configure environment variables
+3. Start the frontend development server
 ```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-4. Start the backend server 
-```bash
+# Start the development server
 npm start
+
+# This will open the application in your browser at http://localhost:3000
 ```
 
-5. Install and run the mobile app 
-```bash
-cd ../mobile
-npm install
-npm start
-```
+### Using the Application
 
-## API Documentation 📝 ( WORKING... )
+1. Register a new account through the registration page
+2. Log in with your credentials
+3. Navigate through the application using the menu:
+   - Dashboard: Overview of your fitness activity
+   - Profile: Update your personal information
+   - Progress: Track and add new workouts
+   - Rewards: View achievements and badges
+
+## API Documentation 📝
 
 Our backend provides the following RESTful endpoints:
 
-### Authentication ( WORKING... )
+### Authentication
 - `POST /api/auth/register` - Create a new user account
 - `POST /api/auth/login` - Authenticate a user
 
-### User Profiles ( WORKING... )
+### User Profiles
 - `GET /api/users/profile` - Get user profile
 - `PUT /api/users/profile` - Update user profile
 
-### Progress Tracking ( WORKING... )
+### Progress Tracking
 - `POST /api/progress` - Record a new workout
 - `GET /api/progress` - Get workout history
 - `GET /api/progress/:id` - Get specific workout details
 
-### Rewards System ( WORKING... )
+### Rewards System
 - `GET /api/rewards` - List all available rewards
 - `GET /api/rewards/user` - Get user's earned rewards
 - `POST /api/rewards/check` - Check for new earned rewards
 
-## Testing 🧪
+## Troubleshooting 🔧
 
-We use Mocha and Chai for testing our backend services:
+### Backend Issues
+- If port 5001 is already in use, change the PORT in .env file
+- Verify MongoDB is running locally or your connection string is correct
+- Check server logs for specific error messages
 
-```bash
-# Run user tests
-npm testUser
-
-```
+### Frontend Issues
+- Make sure the backend server is running before starting the frontend
+- Check browser console for any error messages
+- Verify the API base URL in `src/utils/api.js` matches your backend URL
 
 ## Contributing 👥
 

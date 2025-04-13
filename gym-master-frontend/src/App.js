@@ -1,6 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+
+// Import Exercise Components
+import PushupDetector from './components/exercise/PushupDetector';
 
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -80,9 +83,6 @@ const Home = () => {
   );
 };
 
-// Import Link for Home component
-import { Link } from 'react-router-dom';
-
 function App() { // The App component contains the main layout of the application
   return (
     <AuthProvider>
@@ -121,6 +121,11 @@ function App() { // The App component contains the main layout of the applicatio
               <Route path="/rewards" element={
                 <ProtectedRoute>
                   <RewardsList />
+                </ProtectedRoute>
+              } />
+              <Route path="/exercise/pushups" element={
+                <ProtectedRoute>
+                  <PushupDetector />
                 </ProtectedRoute>
               } />
             </Routes>

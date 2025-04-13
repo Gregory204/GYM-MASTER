@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 20
   },
+  totalXp: { type: Number, default: 0 },
+  level: { type: Number, default: 1 },
+  // streak: { type: Number, default: 0 }, # Future feature
+  // lastWorkout: { type: Date },         # Future feature
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -30,10 +34,15 @@ const UserSchema = new mongoose.Schema({
     age: Number,
     height: Number, // in cm
     weight: Number, // in kg
+    // PROFILE PICTURES IMPLEMNTATION LATER
+    // profilePicture: {
+    //   type: String,
+    //   default: 'default.jpg'
+    // },
     fitnessLevel: {
       type: String,
-      enum: ['beginner', 'intermediate', 'advanced'],
-      default: 'beginner'
+      enum: ['Noobie', 'Rookie', 'Grinder', 'Flex Warrior', 'Beast', 'Absolute Unit', 'Limitless', 'One Punch Man'],
+      default: 'Noobie'
     },
     profilePicture: String
   },
@@ -60,6 +69,9 @@ UserSchema.pre('save', async function(next) {
 UserSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// LEADBOARD STUFF
+UserSchema.index({ totalXp: -1 }); // Sort by totalXp in descending order
 
 module.exports = mongoose.model('User', UserSchema);
 

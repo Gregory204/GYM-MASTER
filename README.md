@@ -51,9 +51,11 @@ Our application follows a modern, microservices architecture:
 - JWT authentication
 - RESTful API architecture
 
-### AI Components (Coming Soon)
-- TensorFlow for pose estimation
-- Form correction algorithms
+### AI Components ( CURRENTLY )
+- Flask for the API server
+- MediaPipe for pose detection
+- Scikit-learn (MLP) for push-up classification
+- OpenCV for image processing
 
 ### Real-time Features (Coming Soon)
 - WebRTC for video streaming
@@ -70,6 +72,30 @@ Our application follows a modern, microservices architecture:
 - Node.js v14+ and npm
 - MongoDB (local installation or MongoDB Atlas)
 - Git
+  
+### Python FLASK API Setup
+
+1. Navigate to push_ups root
+```bash
+cd ExcersiseDetection/push_ups
+```
+
+2. Activate Virtual Enviornment
+```bash
+source .venv/bin/activate # ON WINDOWS: .venv\Scripts\activate
+```
+
+3. Install Python dependencies
+```bash
+cd ..
+pip install -r requirements.txt
+```
+
+4. Start the Flask API Server
+```bash
+cd push_ups
+python3 PushUps.py
+```
 
 ### Backend Setup
 
@@ -84,7 +110,7 @@ cd GYM-MASTER
 # Navigate to the backend directory
 cd gym-master-backend
 
-# Install dependencies
+# Install dependencies ( helmet is not being used yet btw )
 npm install express mongoose dotenv bcrypt jsonwebtoken cors helmet
 
 # Create .env file for configuration

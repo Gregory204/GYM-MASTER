@@ -103,11 +103,7 @@ python3 PushUps.py
 
 ### Backend Setup
 
-1. Get Out of push_ups Directory (if not out already)
-```bash
-cd ../.. # BACK IN GYM_MASTER DIRECTORY
-deactivate # deactivate .venv
-```
+1. Start New Termnial
 
 2. Set up the backend
 ```bash

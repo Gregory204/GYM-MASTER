@@ -77,21 +77,25 @@ Our application follows a modern, microservices architecture:
 
 1. Navigate to push_ups root
 ```bash
-cd ExcersiseDetection/push_ups
+cd ExcersiseDetection
 ```
 
-2. Activate Virtual Enviornment
+2. Create Virtual Enviornment (if not already made)
+```bash
+python -m venv .venv
+```
+
+3. Activate Virtual Enviornment
 ```bash
 source .venv/bin/activate # ON WINDOWS: .venv\Scripts\activate
 ```
 
 3. Install Python dependencies
 ```bash
-cd ..
 pip install -r requirements.txt
 ```
 
-4. Start the Flask API Server
+5. Start the Flask API Server
 ```bash
 cd push_ups
 python3 PushUps.py
@@ -99,10 +103,10 @@ python3 PushUps.py
 
 ### Backend Setup
 
-1. Clone the repository
+1. Get Out of push_ups Directory (if not out already)
 ```bash
-git clone https://github.com/YourUsername/GYM-MASTER.git
-cd GYM-MASTER
+cd ../.. # BACK IN GYM_MASTER DIRECTORY
+deactivate # deactivate .venv
 ```
 
 2. Set up the backend
@@ -110,8 +114,14 @@ cd GYM-MASTER
 # Navigate to the backend directory
 cd gym-master-backend
 
-# Install dependencies ( helmet is not being used yet btw )
-npm install express mongoose dotenv bcrypt jsonwebtoken cors helmet
+# Create virtual enviornmemt (for backend)
+python -m venv myenv
+
+# Activate virtual enviornment (for backend)
+source myvenv/bin/activate # ON WINDOWS: myvenv\Scripts\activate
+
+# Install dependencies 
+pip install -r requirements.txt
 
 # Create .env file for configuration
 echo "PORT=5001

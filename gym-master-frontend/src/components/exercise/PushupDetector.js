@@ -178,6 +178,8 @@ const PushupDetector = () => {
     
     // Draw connections
     const connections = [
+      // Head
+      [0, 1], [1, 2], [2, 3], [3, 4],
       // Torso
       [11, 12], [12, 24], [24, 23], [23, 11],
       // Left arm

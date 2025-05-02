@@ -118,7 +118,7 @@ cd gym-master-backend
 python -m venv myenv
 
 # Activate virtual enviornment (for backend)
-source myvenv/bin/activate # ON WINDOWS: myvenv\Scripts\activate
+source myenv/bin/activate # ON WINDOWS: myvenv\Scripts\activate
 
 # Install dependencies 
 pip install -r requirements.txt

@@ -124,10 +124,10 @@ source myenv/bin/activate # ON WINDOWS: myvenv\Scripts\activate
 pip install -r requirements.txt
 
 # Create .env file for configuration
-echo "PORT=5001
-MONGODB_URI="mongodb+srv://gym-master:<ASK_FOR_PASSWORD>@gym-master.vjykr.mongodb.net/?appName=gym-master"
-JWT_SECRET=your_jwt_secret_key # This is used to sign and verify JSON Web Tokens for user authentication (utils/generateToken.js)
-JWT_EXPIRE=30d" > .env # Duration (30 Days)
+echo 'PORT=5001
+MONGODB_URI=mongodb+srv://gym-master:<ASK_FOR_PASSWORD>@gym-master.vjykr.mongodb.net/?appName=gym-master
+JWT_SECRET=your_jwt_secret_key 
+JWT_EXPIRE=30d' > .env # Duration 30 Days (JWT)
 ```
 
 3. Start the backend server

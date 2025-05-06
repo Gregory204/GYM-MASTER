@@ -7,9 +7,9 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-primary text-white text-center py-3 mt-5">
+    <footer className="bg-white text-secondary text-center footer">
       <div className="container">
-        <p className="mb-0">Gym Master &copy; {new Date().getFullYear()}</p>
+        <p className="mb-2">Gym Master &copy; {new Date().getFullYear()}</p>
       </div>
     </footer>
   );

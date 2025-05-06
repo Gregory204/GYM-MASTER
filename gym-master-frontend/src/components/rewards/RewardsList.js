@@ -4,6 +4,55 @@
 
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
+import mockUsers from '../../data/mockUsers';
+
+
+// Define all achievements
+const achievements = [
+  { label: '10 Push-ups', value: 10, points: 10, type: 'pushup', series: 'pushup' },
+  { label: '50 Push-ups', value: 50, points: 30, type: 'pushup', series: 'pushup' },
+  { label: '100 Push-ups', value: 100, points: 60, type: 'pushup', series: 'pushup' },
+  { label: '200 Push-ups', value: 200, points: 120, type: 'pushup', series: 'pushup' },
+  { label: '500 Push-ups', value: 500, points: 300, type: 'pushup', series: 'pushup' },
+  { label: '1000 Push-ups', value: 1000, points: 700, type: 'pushup', series: 'pushup' },
+  { label: 'Push-up every week (4 weeks streak)', value: 'weekly', points: 200, type: 'streak', series: 'weekly' },
+  { label: 'Push-up every week (12 weeks streak)', value: 'weekly12', points: 600, type: 'streak', series: 'weekly' },
+  { label: 'First Workout', value: 'first', points: 5, type: 'misc' },
+  { label: '30 Day Streak', value: 'streak30', points: 500, type: 'streak' },
+  { label: 'Push-up Master', value: 2000, points: 1000, type: 'pushup' },
+];
+
+const user = mockUsers.find(u => u.id === 1);
+const totalPushups = user.totalPushups || 0;
+const pushupWeeklyStreak = user.pushupWeeklyStreak || 0;
+const userAchievements = user.achievements || [];
+
+// Helper to determine if an achievement is achieved
+const isAchieved = (ach) => {
+  if (ach.type === 'pushup' && typeof ach.value === 'number') {
+    return totalPushups >= ach.value;
+  }
+  if (ach.type === 'streak' && ach.value === 'weekly') {
+    return pushupWeeklyStreak >= 4;
+  }
+  if (ach.type === 'streak' && ach.value === 'weekly12') {
+    return pushupWeeklyStreak >= 12;
+  }
+  // Misc achievements by name
+  return userAchievements.includes(ach.label);
+};
+
+// Helper to determine if an achievement is locked (for series)
+const isLocked = (ach, achievedMap) => {
+  if (!ach.series) return false;
+  // Find previous achievement in the series
+  const seriesAchievements = achievements.filter(a => a.series === ach.series && a.type === ach.type && typeof a.value === typeof ach.value)
+    .sort((a, b) => (typeof a.value === 'number' ? a.value - b.value : 0));
+  const idx = seriesAchievements.findIndex(a => a.label === ach.label);
+  if (idx <= 0) return false; // First in series is never locked
+  const prevAch = seriesAchievements[idx - 1];
+  return !achievedMap[prevAch.label];
+};
 
 const RewardsList = () => {
   const [rewards, setRewards] = useState([]);
@@ -12,6 +61,14 @@ const RewardsList = () => {
   const [error, setError] = useState('');
   const [checkingRewards, setCheckingRewards] = useState(false);
   const [newRewards, setNewRewards] = useState([]);
+
+  // Build a map of achieved achievements for quick lookup
+  const achievedMap = {};
+  achievements.forEach(ach => {
+    achievedMap[ach.label] = isAchieved(ach);
+  });
+
+  const accomplished = achievements.filter(ach => achievedMap[ach.label]);
 
   useEffect(() => {
     fetchRewards();
@@ -130,7 +187,7 @@ const RewardsList = () => {
           <p className="card-text">{reward.description || 'No description available'}</p>
           {reward.pointsValue > 0 && (
             <div className="mt-2">
-              <span className="badge bg-primary">{reward.pointsValue} points</span>
+              <span className="badge bg-danger">{reward.pointsValue} points</span>
             </div>
           )}
         </div>
@@ -186,89 +243,55 @@ const RewardsList = () => {
   }
 
   return (
-    <div className="container mt-4">
-      <div className="row mb-4">
-        <div className="col-md-8">
-          <h2>My Rewards</h2>
-          <p className="text-muted">Track your achievements and unlock new rewards as you progress!</p>
-        </div>
-        <div className="col-md-4 text-end">
-          <button 
-            className="btn btn-primary" 
-            onClick={checkForNewRewards}
-            disabled={checkingRewards}
-          >
-            {checkingRewards ? 'Checking...' : 'Check for New Rewards'}
-          </button>
-        </div>
-      </div>
-      
-      {error && <div className="alert alert-danger">{error}</div>}
-      
-      {/* Newly earned rewards */}
-      {Array.isArray(newRewards) && newRewards.length > 0 && (
-        <div className="alert alert-success">
-          <h4>Congratulations! You've earned new rewards!</h4>
-          <ul className="mb-0">
-            {newRewards.map(nr => (
-              <li key={nr._id || nr.id || `new-reward-${Math.random()}`}>
-                {getRewardIcon(nr.reward?.type || 'badge')} {nr.reward?.name || 'New Reward'}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      
-      {/* Earned rewards */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <h4>Earned Rewards ({Array.isArray(userRewards) ? userRewards.length : 0})</h4>
-          {!Array.isArray(userRewards) || userRewards.length === 0 ? (
-            <div className="alert alert-info">
-              You haven't earned any rewards yet. Keep working out to unlock achievements!
-            </div>
-          ) : (
-            <div className="row row-cols-1 row-cols-md-3 g-4">
-              {userRewards.map(ur => {
-                // Handle different data structures
-                const reward = ur.reward || ur;
-                return (
-                  <div className="col" key={ur._id || ur.id || `user-reward-${Math.random()}`}>
-                    {renderRewardBadge(reward, true)}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {/* Available rewards */}
-      <div className="row">
-        <div className="col-12">
-          <h4>Available Rewards</h4>
-          {!Array.isArray(rewards) || rewards.length === 0 ? (
-            <div className="alert alert-info">
-              No rewards available yet. Check back soon!
-            </div>
-          ) : (
-            <div className="row row-cols-1 row-cols-md-3 g-4">
-              {rewards.map(reward => {
-                const earned = hasEarnedReward(reward._id || reward.id);
-                if (!earned) {
-                  return (
-                    <div className="col" key={reward._id || reward.id || `reward-${Math.random()}`}>
-                      {renderRewardBadge(reward, false)}
+    <section className="rewards-section py-4">
+      <div className="container">
+        <h2 className="display-4 fw-bold mb-4">Rewards Gallery</h2>
+        {accomplished.length > 0 && (
+          <>
+            <h4 className="mb-3">Accomplished Achievements</h4>
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-4">
+              {accomplished.map((ach) => (
+                <div className="col" key={ach.label}>
+                  <div className="card h-100 text-center border-success bg-light" style={{ boxShadow: '0 0 12px #a3e635' }}>
+                    <div className="card-body d-flex flex-column justify-content-center align-items-center">
+                      <div className="display-4 mb-2">{ach.type === 'pushup' ? '💪' : ach.type === 'streak' ? '🔥' : '🏅'}</div>
+                      <h5 className="card-title mb-2">{ach.label}</h5>
+                      <div className="mb-2">{ach.points} <span className="badge bg-warning text-dark">points</span></div>
+                      <span className="badge bg-success">Achieved</span>
                     </div>
-                  );
-                }
-                return null;
-              })}
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          </>
+        )}
+        <h4 className="mb-3">All Achievements</h4>
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {achievements.map((ach) => {
+            const achieved = achievedMap[ach.label];
+            const locked = isLocked(ach, achievedMap);
+            return (
+              <div className="col" key={ach.label}>
+                <div className={`card h-100 text-center ${achieved ? 'border-success bg-light' : locked ? 'border-dark bg-secondary bg-opacity-10 text-muted' : 'border-secondary bg-white text-muted'}`} style={{ boxShadow: achieved ? '0 0 12px #a3e635' : locked ? '0 0 8px #8882' : 'none' }}>
+                  <div className="card-body d-flex flex-column justify-content-center align-items-center">
+                    <div className="display-4 mb-2">{ach.type === 'pushup' ? '💪' : ach.type === 'streak' ? '🔥' : '🏅'}</div>
+                    <h5 className="card-title mb-2">{ach.label}</h5>
+                    <div className="mb-2">{ach.points} <span className="badge bg-warning text-dark">points</span></div>
+                    {achieved ? (
+                      <span className="badge bg-success">Achieved</span>
+                    ) : locked ? (
+                      <span className="badge bg-dark">Locked</span>
+                    ) : (
+                      <span className="badge bg-secondary">Available</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

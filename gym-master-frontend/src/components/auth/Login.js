@@ -33,13 +33,11 @@ const Login = () => {
   };
 
   return ( // The return statement contains the JSX code for the login form.
-    <div className="container mt-5">
+    <div className="container login">
       <div className="row justify-content-center">
         <div className="col-md-6">
+        <h2 className="text-center display-4 fw-bold pb-2">LOGIN</h2>
           <div className="card">
-            <div className="card-header bg-primary text-white">
-              <h2 className="text-center">Login</h2>
-            </div>
             <div className="card-body">
               {error && (
                 <div className="alert alert-danger">{error}</div>
@@ -69,7 +67,7 @@ const Login = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Login</button>
+                <button type="submit" className="btn btn-danger w-100">Login</button>
               </form>
               <div className="mt-3 text-center">
                 Don't have an account? <Link to="/register">Register</Link>

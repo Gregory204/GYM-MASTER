@@ -57,13 +57,11 @@ const Register = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container register">
       <div className="row justify-content-center">
+      <h2 className="text-center display-4 fw-bold pb-2">REGISTER</h2>
         <div className="col-md-6">
           <div className="card">
-            <div className="card-header bg-primary text-white">
-              <h2 className="text-center">Register</h2>
-            </div>
             <div className="card-body">
               {(formError || error) && (
                 <div className="alert alert-danger">{formError || error}</div>
@@ -119,7 +117,7 @@ const Register = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Register</button>
+                <button type="submit" className="btn btn-danger w-100">Register</button>
               </form>
               <div className="mt-3 text-center">
                 Already have an account? <Link to="/login">Login</Link>

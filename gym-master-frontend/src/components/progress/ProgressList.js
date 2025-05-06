@@ -87,9 +87,7 @@ const ProgressList = () => { // The ProgressList component fetches and displays 
 
   return (
     <div className="card">
-      <div className="card-header bg-primary text-white">
-        <h4 className="mb-0">Workout History</h4>
-      </div>
+      <h4 className="display-6 fw-bold pb-2">Workout History</h4>
       <div className="card-body">
         <div className="table-responsive">
           <table className="table table-striped">

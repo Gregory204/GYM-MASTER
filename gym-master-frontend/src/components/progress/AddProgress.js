@@ -217,9 +217,7 @@ const AddProgress = ({ onProgressAdded }) => { // AddProgress component receives
 
   return (
     <div className="card">
-      <div className="card-header bg-primary text-white">
-        <h4 className="mb-0">Record Workout</h4>
-      </div>
+      <h4 className="display-6 fw-bold pb-2">Record Workout</h4>
       <div className="card-body">
         {error && <div className="alert alert-danger">{error}</div>}
         {success && <div className="alert alert-success">Workout recorded successfully!</div>}
@@ -306,7 +304,7 @@ const AddProgress = ({ onProgressAdded }) => { // AddProgress component receives
           
           <button
             type="submit"
-            className="btn btn-primary w-100"
+            className="btn btn-danger w-100"
             disabled={loading}
           >
             {loading ? 'Saving...' : 'Save Workout'}

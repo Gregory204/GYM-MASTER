@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 
 // Import Exercise Components
 import PushupDetector from './components/exercise/PushupDetector';
+import Leaderboard from './components/rewards/Leaderboard';
 
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,6 +23,11 @@ import AddProgress from './components/progress/AddProgress';
 import ProgressList from './components/progress/ProgressList';
 import RewardsList from './components/rewards/RewardsList';
 
+import './App.css';
+
+// Dashboard Component
+import Dashboard from './components/dashboard/Dashboard';
+
 // Protected Route Component
 const ProtectedRoute = ({ children }) => { // This component will be used to protect routes that require authentication 
   const token = localStorage.getItem('token');
@@ -33,51 +39,26 @@ const ProtectedRoute = ({ children }) => { // This component will be used to pro
   return children;
 };
 
-// Dashboard Component
-const Dashboard = () => {
-  return (
-    <div className="container mt-4">
-      <div className="row">
-        <div className="col-md-8">
-          <AddProgress />
-          <div className="mt-4">
-            <ProgressList />
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="card mb-4">
-            <div className="card-header bg-primary text-white">
-              <h4 className="mb-0">Quick Stats</h4>
-            </div>
-            <div className="card-body">
-              <p>Welcome to your fitness dashboard!</p>
-              <p>Track your workouts, monitor your progress, and earn rewards as you improve.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 // Home Component
 const Home = () => {
   return (
-    <div className="container mt-5">
+    <div className="container mx-0 bg-danger home">
       <div className="row align-items-center">
-        <div className="col-md-6">
-          <h1 className="display-4">Track Your Fitness Journey</h1>
-          <p className="lead">
+        <div className="col-md-7">
+          <h1 className="display-1 text-white fw-bold">Track Your Fitness Journey</h1>
+          <p className="lead display-6 text-white">
             Welcome to Gym Master, your personal AI-powered fitness companion.
           </p>
-          <div className="d-grid gap-2 d-md-flex mt-4">
-            <Link to="/register" className="btn btn-primary btn-lg me-md-2">Get Started</Link>
-            <Link to="/login" className="btn btn-outline-secondary btn-lg">Login</Link>
+          <div className="d-grid gap-2 d-md-flex pt-4 justify-content-md-end px-3">
+            <Link to="/register" className="btn btn-light btn-outline-danger btn-lg me-md-2">Get Started</Link>
+            <Link to="/login" className="btn btn-light btn-outline-danger btn-lg">Login</Link>
           </div>
         </div>
-        <div className="col-md-6 text-center">
-          <div className="display-1" style={{ fontSize: '150px' }}>🏋️</div>
+        
+        <div className="col-md-4 text-center">
+          <div className="display-1" style={{ fontSize: '180px' }}>🏋️</div>
         </div>
+        <div className="col-md-1"></div>
       </div>
     </div>
   );
@@ -128,6 +109,11 @@ function App() { // The App component contains the main layout of the applicatio
                   <PushupDetector />
                 </ProtectedRoute>
               } />
+              <Route path="/leaderboard" element={
+                <ProtectedRoute>
+                  <Leaderboard />
+                </ProtectedRoute>
+                } />
             </Routes>
           </main>
           <Footer />
